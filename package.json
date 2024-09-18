@@ -1,29 +1,20 @@
 {
-  "name": "react-challenge-dev-profile-starter",
+  "name": "mern-estate",
   "version": "1.0.0",
-  "description": "",
-  "keywords": [],
-  "main": "src/index.js",
-  "dependencies": {
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-router-dom": "^6.26.1",
-    "react-scripts": "^3.0.1"
-  },
-  "devDependencies": {
-    "@babel/runtime": "7.13.8",
-    "typescript": "4.1.3"
-  },
+  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "dev": "nodemon api/index.js",
+    "start": "node api/index.js"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "mongoose": "^8.6.3",
+    "nodemon": "^3.1.5"
+  }
 }
