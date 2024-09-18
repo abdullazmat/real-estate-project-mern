@@ -1,0 +1,39 @@
+/* Nav Background  */ 
+.app-header {
+    background-color:#E2E8F0;
+  }
+
+/* Nav Logo  */ 
+.MernText {
+    color: #607ca4;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.EstateText {
+    color: #144180;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Nav LINKS */ 
+.navtext{
+    font-size: 1.1rem;
+}
+
+/*  Search Logo Hover */
+.searchicon{
+    color: black;
+}
+.searchicon:hover{
+    cursor: pointer;
+    color: #1861c7;
+}
+
+
+/* Media Query for header */
+@media (max-width: 600px) {
+    .app-header .d-flex form {
+      width: 70px; 
+      padding-right: 150px;
+    }
+}
