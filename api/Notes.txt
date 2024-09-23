@@ -1,0 +1,23 @@
+Router:
+
+Purpose: Defines the different routes or endpoints that the application responds to, e.g., /users, /posts.
+Simple Terms: It handles the URLs and determines which logic (controller) to call based on the incoming requests.
+
+
+Controller:
+
+Purpose: Contains the business logic for each route. It defines what happens when a certain route is hit, like fetching data, updating records, etc.
+Simple Terms: It decides what to do when a request comes in (e.g., retrieve data, save data).
+
+
+Model:
+
+Purpose: Defines the data structure or schema (especially with databases like MongoDB or Sequelize). It often interacts with the database to fetch, update, or delete data.
+Simple Terms: It represents and interacts with the data (e.g., user data, product data).
+
+
+Index File:
+
+Purpose: Usually the entry point of your application. It sets up your Express app, configures middleware, connects routers, and listens on a specific port.
+Simple Terms: It's the main file that starts your application and ties everything together.
+

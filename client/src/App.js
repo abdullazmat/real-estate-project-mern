@@ -17,7 +17,7 @@ function App() {
         <Route path='/sign-up' element={<SignUp/>} />
         <Route path='/sign-out' element={<SignOut/>} />
         <Route path='/profile' element={<Profile/>} />
-        <Route path='*' element={<NotFound />} />
+        {/* <Route path='*' element={<NotFound />} /> */}
       </Routes>
     </BrowserRouter>
   );
