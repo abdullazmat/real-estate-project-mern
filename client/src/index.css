@@ -1,4 +1,8 @@
 /* Nav Background  */ 
+body {
+    background-color: rgb(241, 250, 241);
+}
+
 .app-header {
     background-color:#E2E8F0;
   }
@@ -36,4 +40,20 @@
       width: 70px; 
       padding-right: 150px;
     }
+    .signup-form{
+        width: 5rem;
+        }
+}
+
+
+/*  SignUp Form     */
+.signup-form{
+width: 30rem;
+}
+.signup-btn{
+    background-color: #374151;
+    color: white;
+}
+.signup-btn:hover{
+    background-color: #4b5563;
 }
