@@ -57,3 +57,16 @@ width: 30rem;
 .signup-btn:hover{
     background-color: #4b5563;
 }
+.already-acc-signin{
+    display: flex;
+
+}
+.form-text{
+    padding-right: .7rem;
+    font-size: .9rem;
+    padding-top: 0;
+}
+.sign-in-txt{
+    text-decoration: none;
+    font-size: .9rem;
+}

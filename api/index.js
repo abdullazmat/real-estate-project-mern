@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import UserRouter from "./routes/user.route.js";
 import Authrouter from './routes/auth.route.js';  
 
@@ -22,6 +23,11 @@ mongoose.connect(mongoURI, {
 });
 
 const app = express();
+
+// Enable CORS for all routes
+app.use(cors({
+  origin: 'http://localhost:3000', // Allow requests from your React app
+}));
 
 // Middleware to use JSON
 app.use(express.json());
