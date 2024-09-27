@@ -21,3 +21,10 @@ Index File:
 Purpose: Usually the entry point of your application. It sets up your Express app, configures middleware, connects routers, and listens on a specific port.
 Simple Terms: It's the main file that starts your application and ties everything together.
 
+
+Token (JWT):
+Instead of making the user log in again every time they visit a new page, the token is used to remember that the user is already logged in.
+The token is stored in a cookie and sent with every request to the server, so the server knows it's the same user
+
+
+

@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function SignUp() {
     const [formData, setFormData] = useState({ username: '', email: '', password: '' });
     const [alertColor, setAlertColor] = useState(null);
     const [showAlert, setShowAlert] = useState(false);
     const [alertMsg, setAlertMsg] = useState(null);
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setFormData({
@@ -46,6 +47,7 @@ function SignUp() {
             setShowAlert(true);
             setAlertMsg("User Created Successfully");
             setFormData({ username: '', email: '', password: '' }); // Reset form fields here
+            navigate("/sign-in")
         }
 
         // Hide the alerts after 3 seconds
