@@ -47,12 +47,12 @@ function SignUp() {
             setShowAlert(true);
             setAlertMsg("User Created Successfully");
             setFormData({ username: '', email: '', password: '' }); // Reset form fields here
-            navigate("/sign-in")
         }
 
         // Hide the alerts after 3 seconds
         setTimeout(() => {
             setShowAlert(false);
+            navigate("/sign-in")
         }, 1000);
     };
 
