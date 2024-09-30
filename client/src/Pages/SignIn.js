@@ -1,12 +1,21 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../Redux/user/userSlice";
 
 function SignIn() {
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [alertColor, setAlertColor] = useState(null);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMsg, setAlertMsg] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Access the Redux state (for alerts and loading)
+  const { showAlert, alertMsg, alertColor } = useSelector(
+    (state) => state.user
+  );
 
   // Define handleChange to update formData
   const handleChange = (e) => {
@@ -19,6 +28,9 @@ function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Dispatch signInStart to indicate that the sign-in process has started
+    dispatch(signInStart());
+
     try {
       const res = await fetch("/api/auth/sign-in", {
         method: "POST",
@@ -30,29 +42,19 @@ function SignIn() {
 
       const data = await res.json();
 
-      // Check for error statuses
       if (res.ok) {
-        // res.ok is true for status codes 200-299
-        setAlertColor("primary");
-        setShowAlert(true);
-        setAlertMsg(data.message || "Sign In Successful");
-        setFormData({ email: "", password: "" }); // Reset form fields here
-        setTimeout(() => navigate("/"), 1000); // Redirect after successful login
-      } else {
-        // Handle non-2xx HTTP statuses
-        setAlertColor("warning");
-        setShowAlert(true);
-        setAlertMsg(data.message || "Wrong Credentials");
-        setFormData({ email: "", password: "" }); // Reset form fields here
-      }
+        // Dispatch signInSuccess and pass the user data to Redux store
+        dispatch(signInSuccess(data.user));
 
-      // Hide the alerts after 1 seconds
-      setTimeout(() => setShowAlert(false), 1000);
+        // Navigate to another page after successful login
+        setTimeout(() => navigate("/"), 1000);
+      } else {
+        // Dispatch signInFailure with the error message
+        dispatch(signInFailure(data.message));
+      }
     } catch (error) {
-      setAlertColor("danger");
-      setShowAlert(true);
-      setAlertMsg("An error occurred. Please try again.");
-      setTimeout(() => setShowAlert(false), 1000);
+      // Dispatch signInFailure with a generic error message
+      dispatch(signInFailure("An error occurred. Please try again."));
     }
   };
 
