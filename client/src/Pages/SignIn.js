@@ -49,12 +49,16 @@ function SignIn() {
         // Navigate to another page after successful login
         setTimeout(() => navigate("/"), 1000);
       } else {
-        // Dispatch signInFailure with the error message
-        dispatch(signInFailure(data.message));
+        // Delay the dispatch of failure action
+        setTimeout(() => {
+          dispatch(signInFailure(data.message || "Wrong Credentials"));
+        }, 1000);
       }
     } catch (error) {
-      // Dispatch signInFailure with a generic error message
-      dispatch(signInFailure("An error occurred. Please try again."));
+      // Delay the dispatch of a generic failure action
+      setTimeout(() => {
+        dispatch(signInFailure("An error occurred. Please try again."));
+      }, 1000);
     }
   };
 
