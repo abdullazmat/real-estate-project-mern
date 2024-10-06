@@ -1,37 +1,26 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-} from "../Redux/user/userSlice";
 
 function SignIn() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  // Access the Redux state (for alerts and loading)
-  const { showAlert, alertMsg, alertColor } = useSelector(
-    (state) => state.user
-  );
-
-  // Define handleChange to update formData
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Dispatch signInStart to indicate that the sign-in process has started
-    dispatch(signInStart());
-
     try {
+      setLoading(true);
       const res = await fetch("/api/auth/sign-in", {
         method: "POST",
         headers: {
@@ -41,35 +30,30 @@ function SignIn() {
       });
 
       const data = await res.json();
-
-      if (res.ok) {
-        // Dispatch signInSuccess and pass the user data to Redux store
-        dispatch(signInSuccess(data.user));
-
-        // Navigate to another page after successful login
-        setTimeout(() => navigate("/"), 1000);
-      } else {
-        // Delay the dispatch of failure action
+      console.log(data);
+      if (data.success === false) {
+        setLoading(false);
+        setError(data.message);
         setTimeout(() => {
-          dispatch(signInFailure(data.message || "Wrong Credentials"));
-        }, 1000);
+          setError(null);
+        }, 3000);
+        return;
+      } else {
+        setLoading(false);
+        setError(null);
+        navigate("/");
       }
     } catch (error) {
-      // Delay the dispatch of a generic failure action
+      setLoading(false);
+      setError("An error occurred. Please try again.");
       setTimeout(() => {
-        dispatch(signInFailure("An error occurred. Please try again."));
+        setError(null);
       }, 1000);
     }
   };
 
   return (
     <>
-      {showAlert && (
-        <div className={`alert text-center alert-${alertColor}`} role="alert">
-          {alertMsg}
-        </div>
-      )}
-
       <h1 className="container my-5 ms-auto text-center fw-bold">Sign In</h1>
       <form className="container my-5 signup-form" onSubmit={handleSubmit}>
         <div className="mb-3">
@@ -100,8 +84,12 @@ function SignIn() {
           />
         </div>
         <div className="d-grid my-4 col-12">
-          <button className="btn signup-btn rounded-pill" type="submit">
-            Sign In
+          <button
+            className="btn signup-btn rounded-pill"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Loading ..." : "Sign In"}
           </button>
           <div className="already-acc-signin my-4">
             <p className="form-text">Don't have an account?</p>
@@ -109,6 +97,7 @@ function SignIn() {
               <span>Sign Up</span>
             </Link>
           </div>
+          <div>{error && <p className="text-danger">{error}</p>}</div>
         </div>
       </form>
     </>

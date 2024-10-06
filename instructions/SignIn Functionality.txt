@@ -1,0 +1,15 @@
+1. The fetch function in sign-in.js sends a POST request to api/auth/sign-in from the frontend.
+
+2. The request first reaches index.js, where the server routes are defined.
+
+3. If the URL is invalid, the request will not match any routes, and the error-handling middleware will catch it (this would handle 404 errors for invalid URLs). But if the URL is correct, the request proceeds to the correct route.
+
+4. If the URL is valid, the request is routed to auth.route.js, which handles requests to /api/auth/sign-in by passing them to the appropriate controller function.
+
+5. In auth.route.js, it finds a match for the /sign-in POST route and calls the corresponding signin function from auth.controller.js.
+
+6. In auth.controller.js, the signin function contains the logic to check the user credentials (email, password). If there is an error (e.g., user not found, incorrect password), it calls next(errorHandler(statuscode, message)), passing the custom error.
+
+7. The next(error) sends the error object to the error-handling middleware in index.js. This middleware extracts the error's status code and message, and then responds back to the user with a JSON object containing the error details.
+
+8. The user receives the response with the appropriate status code and error message (e.g., { success: false, statuscode: 404, message: "User not found!" }).
