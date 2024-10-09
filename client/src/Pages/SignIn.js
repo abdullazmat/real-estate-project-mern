@@ -6,6 +6,7 @@ import {
   signInSuccess,
   signInFailure,
 } from "../Redux/user/userSlice.js";
+import OAuth from "../Components/OAuth.js";
 
 function SignIn() {
   const [formData, setFormData] = useState({
@@ -38,7 +39,6 @@ function SignIn() {
       });
 
       const data = await res.json();
-      console.log(data);
       if (data.success === false) {
         dispatch(signInFailure(data.message));
         setError(data.message); // Set the error message
@@ -98,6 +98,7 @@ function SignIn() {
           >
             {loading ? "Loading ..." : "Sign In"}
           </button>
+          <OAuth />
           <div className="already-acc-signin my-4">
             <p className="form-text">Don't have an account?</p>
             <Link to={"/sign-up"} style={{ textDecoration: "none" }}>

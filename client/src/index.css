@@ -1,72 +1,75 @@
-/* Nav Background  */ 
+/* Nav Background  */
 body {
-    background-color: rgb(241, 250, 241);
+  background-color: rgb(241, 250, 241);
 }
 
 .app-header {
-    background-color:#E2E8F0;
-  }
+  background-color: #e2e8f0;
+}
 
-/* Nav Logo  */ 
+/* Nav Logo  */
 .MernText {
-    color: #607ca4;
-    font-size: 1.5rem;
-    font-weight: bold;
+  color: #607ca4;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 .EstateText {
-    color: #144180;
-    font-size: 1.5rem;
-    font-weight: bold;
+  color: #144180;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
-/* Nav LINKS */ 
-.navtext{
-    font-size: 1.1rem;
+/* Nav LINKS */
+.navtext {
+  font-size: 1.1rem;
 }
 
 /*  Search Logo Hover */
-.searchicon{
-    color: black;
+.searchicon {
+  color: black;
 }
-.searchicon:hover{
-    cursor: pointer;
-    color: #1861c7;
+.searchicon:hover {
+  cursor: pointer;
+  color: #1861c7;
 }
-
 
 /* Media Query for header */
 @media (max-width: 600px) {
-    .app-header .d-flex form {
-      width: 70px; 
-      padding-right: 150px;
-    }
-    .signup-form{
-        width: 5rem;
-        }
+  .app-header .d-flex form {
+    width: 70px;
+    padding-right: 150px;
+  }
+  .signup-form {
+    width: 5rem;
+  }
 }
-
 
 /*  SignUp Form     */
-.signup-form{
-width: 30rem;
+.signup-form {
+  width: 30rem;
 }
-.signup-btn{
-    background-color: #374151;
-    color: white;
+.signup-btn {
+  background-color: #374151;
+  color: white;
 }
-.signup-btn:hover{
-    background-color: #4b5563;
+.signup-btn:hover {
+  background-color: #4b5563;
 }
-.already-acc-signin{
-    display: flex;
+.already-acc-signin {
+  display: flex;
+}
+.form-text {
+  padding-right: 0.7rem;
+  font-size: 0.9rem;
+  padding-top: 0;
+}
+.sign-in-txt {
+  text-decoration: none;
+  font-size: 0.9rem;
+}
 
-}
-.form-text{
-    padding-right: .7rem;
-    font-size: .9rem;
-    padding-top: 0;
-}
-.sign-in-txt{
-    text-decoration: none;
-    font-size: .9rem;
+/*  Google Auth Button */
+.auth-btn:hover {
+  cursor: pointer;
+  background-color: rgb(110, 36, 36);
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import OAuth from "../Components/OAuth.js";
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -101,6 +102,7 @@ function SignUp() {
           >
             {loading ? "Loading..." : "Sign Up"}
           </button>
+          <OAuth />
           <div className="already-acc-signin my-4">
             <p className="form-text">Already have an account?</p>
             <Link to={"/sign-in"} style={{ textDecoration: "none" }}>
