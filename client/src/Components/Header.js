@@ -1,7 +1,15 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 function Header() {
+  const { currentUser } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    console.log("currentUser updated:", currentUser);
+  }, [currentUser]); // Log whenever currentUser changes
+
   // Get the current path using `useLocation`
   const location = useLocation();
 
@@ -17,10 +25,14 @@ function Header() {
     <nav className="navbar navbar-expand-lg navbar-light py-3 app-header">
       <div className="container">
         {/* Logo on the left */}
-        <Link className={`navbar-brand ${active === "/" ? "active" : ""}`} to="/" onClick={() => handleSetActive("/")}>
-  <span className="MernText">Mern</span> <span className="EstateText">Estate</span>
+        <Link
+          className={`navbar-brand ${active === "/" ? "active" : ""}`}
+          to="/"
+          onClick={() => handleSetActive("/")}
+        >
+          <span className="MernText">Mern</span>{" "}
+          <span className="EstateText">Estate</span>
         </Link>
-
 
         {/* Toggler for mobile view */}
         <button
@@ -60,7 +72,9 @@ function Header() {
             <ul className="navbar-nav mb-2 mb-lg-0 ms-auto navlinks">
               <li className="nav-item">
                 <Link
-                  className={`nav-link navtext ${active === "/" ? "active" : ""}`}
+                  className={`nav-link navtext ${
+                    active === "/" ? "active" : ""
+                  }`}
                   to="/"
                   onClick={() => handleSetActive("/")}
                 >
@@ -69,7 +83,9 @@ function Header() {
               </li>
               <li className="nav-item">
                 <Link
-                  className={`nav-link navtext ${active === "/about-us" ? "active" : ""}`}
+                  className={`nav-link navtext ${
+                    active === "/about-us" ? "active" : ""
+                  }`}
                   to="/about-us"
                   onClick={() => handleSetActive("/about-us")}
                 >
@@ -78,11 +94,25 @@ function Header() {
               </li>
               <li className="nav-item">
                 <Link
-                  className={`nav-link navtext ${active === "/sign-up" ? "active" : ""}`}
-                  to="/sign-up"
-                  onClick={() => handleSetActive("/sign-up")}
+                  style={{ textDecoration: "none" }}
+                  to={currentUser ? "/profile" : "/sign-in"}
+                  onClick={() => !currentUser && handleSetActive("/sign-in")}
                 >
-                  LogIn
+                  {currentUser ? (
+                    <img
+                      src={currentUser.avatar}
+                      className="pfp-image"
+                      alt={currentUser.name}
+                    />
+                  ) : (
+                    <span
+                      className={`nav-link navtext ${
+                        active === "/sign-in" ? "active" : ""
+                      }`}
+                    >
+                      Log In
+                    </span>
+                  )}
                 </Link>
               </li>
             </ul>

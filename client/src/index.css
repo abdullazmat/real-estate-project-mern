@@ -19,9 +19,20 @@ body {
   font-weight: bold;
 }
 
+.pfp-image {
+  width: 2rem;
+  border-radius: 50%;
+  padding-top: 0.2rem;
+  margin-left: 0.7rem;
+}
+
 /* Nav LINKS */
 .navtext {
   font-size: 1.1rem;
+}
+
+.nav-login-link {
+  text-decoration: none;
 }
 
 /*  Search Logo Hover */

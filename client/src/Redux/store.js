@@ -3,20 +3,23 @@ import userReducer from "./user/userSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-const rootReducer = combineReducers({ user: userReducer });
+// Combine your reducers here
+const rootReducer = combineReducers({
+  user: userReducer,
+  // add other reducers here if needed
+});
 
 const persistConfig = {
-  key: "root",
-  storage,
-  version: 1,
+  key: "root", // key to persist the root state
+  storage, // storage engine
+  version: 1, // version of the persisted state
 };
 
+// Create a persisted reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: {
-    user: persistedReducer, // Add userReducer to the store
-  },
+  reducer: persistedReducer, // Use persistedReducer for the root reducer
   middleware: (
     getDefaultMiddleware // Disable serializableCheck
   ) =>

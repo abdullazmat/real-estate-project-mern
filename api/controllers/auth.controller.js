@@ -60,12 +60,12 @@ export const google = async (req, res, next) => {
       await newUser.save();
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
       const { password: pass, ...rest } = newUser._doc;
-      res
-        .cookie("access_token", token, { httpOnly: true })
-        .status(200)
-        .json(rest);
+      res.cookie("access_token", token, { httpOnly: true }).status(200).json({
+        rest,
+      });
     }
   } catch (error) {
+    console.log("Error in Google authentication:", error); // Log the error for server-side debugging
     res.status(500).json({ message: "Server error", error });
   }
 };
