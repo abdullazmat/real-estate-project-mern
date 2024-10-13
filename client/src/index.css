@@ -53,6 +53,10 @@ body {
   .signup-form {
     width: 5rem;
   }
+
+  .profile-form {
+    width: 5rem;
+  }
 }
 
 /*  SignUp Form     */
@@ -83,4 +87,43 @@ body {
 .auth-btn:hover {
   cursor: pointer;
   background-color: rgb(110, 36, 36);
+}
+
+/*  profile form */
+.profile-form {
+  width: 30rem;
+}
+
+.update-btn {
+  background-color: #374151;
+  color: white;
+}
+.update-btn:hover {
+  background-color: #4b5563;
+}
+
+.create-listing-btn {
+  background-color: green;
+  color: white;
+}
+.create-listing-btn:hover {
+  background-color: rgb(49, 92, 49);
+}
+
+.show-listing-txt {
+  text-decoration: none;
+  color: #2f855a;
+}
+.show-listing-txt:hover {
+  color: #1861c7;
+  cursor: pointer;
+}
+
+.del-acc-txt {
+  color: red;
+  text-decoration: none;
+}
+.del-acc-txt:hover {
+  color: #3d4249;
+  cursor: pointer;
 }

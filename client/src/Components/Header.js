@@ -1,14 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
 
 function Header() {
   const { currentUser } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    console.log("currentUser updated:", currentUser);
-  }, [currentUser]); // Log whenever currentUser changes
 
   // Get the current path using `useLocation`
   const location = useLocation();
