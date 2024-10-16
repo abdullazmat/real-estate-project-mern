@@ -94,6 +94,11 @@ body {
   width: 30rem;
 }
 
+.img-avatar {
+  width: 150px;
+  height: 150px;
+}
+
 .update-btn {
   background-color: #374151;
   color: white;
