@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import UserRouter from "./routes/user.route.js";
 import Authrouter from "./routes/auth.route.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config(); // Load environment variables from .env file
 
@@ -36,6 +37,9 @@ app.use(
 
 // Middleware to use JSON
 app.use(express.json());
+
+// Middleware to use cookies
+app.use(cookieParser());
 
 app.listen(3001, () => {
   console.log("Server is running on port 3001");
