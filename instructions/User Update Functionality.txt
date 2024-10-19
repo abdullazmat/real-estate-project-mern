@@ -1,0 +1,36 @@
+User Updates Profile → Form Submission.
+
+File: Profile.js
+User fills the form with updated data (e.g., username, email, password, avatar) and submits.
+
+2. Redux Dispatches Action → Start Update Process.
+File: Profile.js, userSlice.js
+Dispatch updateUserStart action to indicate the update process has started (sets loading to true).
+
+3. Frontend Sends POST Request → With Updated Data.
+File: Profile.js
+Send POST request to /api/user/update/:id with updated user data (form data).
+
+4. Server Verifies Token → Authentication.
+File: verifyUser.js
+Use verifyToken middleware to check if the user is authenticated via JWT stored in cookies.
+
+5. Controller Updates User → Checks Permissions, Hashes Password, Updates Database.
+File: user.controller.js
+In updateUser, ensure the logged-in user is the one making the update. Hash the new password if it’s provided and update the user’s info in MongoDB.
+
+6. Response Sent to Frontend → User Updated or Error Occurred.
+File: user.controller.js
+Send updated user info (excluding password) back to the frontend, or return an error if something went wrong.
+
+7. Redux Updates State → Stores Updated User Info or Error.
+File: userSlice.js
+Dispatch updateUserSuccess action to store updated user info in Redux state, or updateUserFailure if the update failed.
+
+8. Profile Page Re-Renders → Shows Updated User Info.
+File: Profile.js
+The profile page re-renders automatically because the updated user info is stored in Redux, and useSelector grabs the new data.
+
+9. Database Reflects Changes → Updated User Data Stored.
+File: MongoDB (Database)
+MongoDB stores the new user data (username, email, password, avatar), and the database reflects the changes.

@@ -14,10 +14,12 @@ export const updateUser = async (req, res, next) => {
   }
 
   try {
+    // If password is being updated, hash it
     if (req.body.password) {
       req.body.password = bcrypt.hashSync(req.body.password, 8);
     }
 
+    // Update the user with new values including avatar
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
@@ -25,11 +27,13 @@ export const updateUser = async (req, res, next) => {
           username: req.body.username,
           email: req.body.email,
           password: req.body.password,
+          avatar: req.body.avatar, // Add avatar field to be updated
         },
       },
-      { new: true }
+      { new: true } // Return the updated document
     );
 
+    // Exclude the password from the response
     const { password, ...rest } = updatedUser._doc;
 
     res.status(200).json(rest);
