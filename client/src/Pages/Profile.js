@@ -12,6 +12,8 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserStart,
+  deleteUserFailure,
 } from "../Redux/user/userSlice";
 
 function Profile() {
@@ -122,6 +124,23 @@ function Profile() {
     }
   };
 
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/delete/user/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+      } else {
+        dispatch(deleteUserSuccess(data));
+      }
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+    }
+  };
+
   return (
     <>
       <div className="container mb-0">
@@ -207,6 +226,21 @@ function Profile() {
             >
               Create Listing
             </button>
+            <div className="d-flex">
+              <button
+                className="btn delete-account-btn text-danger py-4 me-auto"
+                type="button"
+                onClick={handleDeleteUser}
+              >
+                Delete Account
+              </button>
+              <button
+                className="btn sign-out-btn text-danger py-4"
+                type="button"
+              >
+                Sign Out
+              </button>
+            </div>
             {messageVisible && (
               <p
                 className={`fw-bold py-4 ${
