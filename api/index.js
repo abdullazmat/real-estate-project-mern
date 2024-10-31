@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import UserRouter from "./routes/user.route.js";
 import Authrouter from "./routes/auth.route.js";
+import ListingRouter from "./routes/listing.route.js";
 import cookieParser from "cookie-parser";
 
 dotenv.config(); // Load environment variables from .env file
@@ -48,6 +49,7 @@ app.listen(3001, () => {
 // Route Handling
 app.use("/api/user", UserRouter);
 app.use("/api/auth", Authrouter);
+app.use("/api/listing", ListingRouter);
 
 // Middle Ware Error Handling
 app.use((err, req, res, next) => {
