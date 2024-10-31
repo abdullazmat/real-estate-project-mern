@@ -13,7 +13,11 @@ import {
   updateUserSuccess,
   updateUserFailure,
   deleteUserStart,
+  deleteUserSuccess,
   deleteUserFailure,
+  signOutUserStart,
+  signOutUserSuccess,
+  signOutUserFailure,
 } from "../Redux/user/userSlice";
 
 function Profile() {
@@ -127,17 +131,36 @@ function Profile() {
   const handleDeleteUser = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`/api/delete/user/${currentUser._id}`, {
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
         method: "DELETE",
       });
       const data = await res.json();
       if (data.success === false) {
+        console.error(data.message); // Log error message
         dispatch(deleteUserFailure(data.message));
+        return;
       } else {
         dispatch(deleteUserSuccess(data));
       }
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutUserStart());
+      const res = await fetch(`/api/auth/signout`, {
+        method: "GET",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signOutUserFailure(data.message));
+      } else {
+        dispatch(signOutUserSuccess(data));
+      }
+    } catch (error) {
+      dispatch(signOutUserFailure(error.message));
     }
   };
 
@@ -237,6 +260,7 @@ function Profile() {
               <button
                 className="btn sign-out-btn text-danger py-4"
                 type="button"
+                onClick={handleSignOut}
               >
                 Sign Out
               </button>
