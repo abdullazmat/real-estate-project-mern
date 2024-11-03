@@ -8,6 +8,7 @@ import SignIn from "./Pages/SignIn";
 import Profile from "./Pages/Profile";
 import NotFound from "./Pages/NotFound";
 import PrivateRoute from "./Components/PrivateRoute";
+import CreateListing from "./Pages/CreateListing";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/sign-in" element={<SignIn />} />
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/create-listing" element={<CreateListing />}></Route>
         </Route>
         {/* <Route path='*' element={<NotFound />} /> */}
       </Routes>

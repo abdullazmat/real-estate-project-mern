@@ -132,3 +132,9 @@ body {
   color: #3d4249;
   cursor: pointer;
 }
+
+/*  Create Listing Page */
+.create-listing-fr:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}

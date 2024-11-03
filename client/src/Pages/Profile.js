@@ -19,6 +19,7 @@ import {
   signOutUserSuccess,
   signOutUserFailure,
 } from "../Redux/user/userSlice";
+import { Link } from "react-router-dom";
 
 function Profile() {
   const fileRef = useRef(null);
@@ -243,12 +244,12 @@ function Profile() {
             >
               {loading ? "Loading..." : "Update"}
             </button>
-            <button
+            <Link
+              to="/create-listing"
               className="btn create-listing-btn rounded-pill"
-              type="button"
             >
               Create Listing
-            </button>
+            </Link>
             <div className="d-flex">
               <button
                 className="btn delete-account-btn text-danger py-4 me-auto"
