@@ -32,6 +32,9 @@ function Profile() {
   const [fileUploaded, setFileUploaded] = useState(false); // Track image upload completion
   const [messageVisible, setMessageVisible] = useState(false); // Set initially to false
   const [SucessMessageVisible, setSucessMessageVisible] = useState(false); // Set initially to false
+  const [showListingsError, setShowListingsError] = useState(false);
+  const [userListing, setUserListing] = useState([]);
+  const [showUserListing, setShowUserListing] = useState(false);
   const dispatch = useDispatch();
 
   // Handle image file upload
@@ -165,6 +168,31 @@ function Profile() {
     }
   };
 
+  const handleShowListings = async (e) => {
+    e.preventDefault();
+    if (showUserListing) {
+      setShowUserListing(false);
+      return;
+    } else {
+      try {
+        const res = await fetch(`/api/user/listings/${currentUser._id}`, {
+          method: "GET",
+        });
+        const data = await res.json();
+        if (data.success === false) {
+          setShowListingsError(true);
+          return;
+        }
+        console.log(data);
+        setUserListing(data);
+        setShowUserListing(true);
+      } catch (error) {
+        setShowListingsError(true);
+        console.error(error);
+      }
+    }
+  };
+
   return (
     <>
       <div className="container mb-0">
@@ -267,8 +295,11 @@ function Profile() {
               </button>
             </div>
             <div className="py-3 d-flex justify-content-center">
-              <a href="#" className="text-success my-listing-link">
-                {" "}
+              <a
+                href="#"
+                className="text-success my-listing-link"
+                onClick={handleShowListings}
+              >
                 Show Listings
               </a>
             </div>
@@ -280,6 +311,76 @@ function Profile() {
               >
                 {error ? error : "User Info Updated"}
               </p>
+            )}
+            {showListingsError && (
+              <p className="text-danger fw-bold py-4">
+                Error fetching listings
+              </p>
+            )}
+            {userListing && showUserListing && userListing.length > 0 && (
+              <div className="text-center my-5 ">
+                <h2 className="font-weight-bold">Your Listings</h2>
+                {userListing.map((listing) => (
+                  <div
+                    className="container my-3 d-flex justify-content-between"
+                    key={listing._id}
+                    style={{ border: "1px solid #ccc", padding: "10px" }}
+                  >
+                    <div className="listing-detail d-flex">
+                      <div
+                        className="listing-image d-flex"
+                        style={{ flexWrap: "wrap" }}
+                      >
+                        {listing.imageUrls.map((imageUrl, index) => (
+                          <img
+                            key={index}
+                            src={imageUrl}
+                            alt={listing.name}
+                            className="listing-image"
+                            style={{
+                              maxWidth: "100px",
+                              marginRight: "10px",
+                              marginBottom: "10px",
+                            }}
+                          />
+                        ))}
+                      </div>
+
+                      <div className="listing-info">
+                        <p>
+                          <b>{listing.name}</b>
+                        </p>
+                      </div>
+                    </div>
+                    <div className="listings-edit pe-1">
+                      <div>
+                        <Link
+                          to={`/edit-listing/${listing._id}`}
+                          style={{
+                            color: "green",
+                            display: "block",
+                            textDecoration: "none",
+                          }}
+                        >
+                          Edit
+                        </Link>
+                      </div>
+                      <div>
+                        <Link
+                          to={`/delete-listing/${listing._id}`}
+                          style={{
+                            color: "red",
+                            display: "block",
+                            textDecoration: "none",
+                          }}
+                        >
+                          Delete
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </form>
