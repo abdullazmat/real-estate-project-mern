@@ -6,60 +6,38 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { app } from "../firebase";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function CreateListing() {
-  // State for beds and baths count
-  const [beds, setBeds] = useState(1);
-  const [baths, setBaths] = useState(1);
-  const [regular, setRegular] = useState(0);
-  const [discount, setDiscount] = useState(0);
-
-  // Functions to handle increment and decrement for bed count
-  const handleBedsChange = (increment) => {
-    setBeds((prev) => {
-      if (increment && prev < 10) return prev + 1;
-      if (!increment && prev > 1) return prev - 1;
-      return prev;
-    });
-  };
-
-  // Functions to handle increment and decrement for bath count
-  const handleBathsChange = (increment) => {
-    setBaths((prev) => {
-      if (increment && prev < 10) return prev + 1;
-      if (!increment && prev > 1) return prev - 1;
-      return prev;
-    });
-  };
-
-  // Functions to handle increment and decrement for regular price
-  const handleRegularChange = (increment) => {
-    setRegular((prev) => {
-      if (increment && prev < 10) return prev + 1;
-      if (!increment && prev > 1) return prev - 1;
-      return prev;
-    });
-  };
-
-  // Functions to handle increment and decrement for discount price
-  const handleDiscountChange = (increment) => {
-    setDiscount((prev) => {
-      if (increment && prev < 10) return prev + 1;
-      if (!increment && prev > 1) return prev - 1;
-      return prev;
-    });
-  };
-
+  const { currentUser } = useSelector((state) => state.user);
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
-    imageURls: [],
+    imageUrls: [],
+    name: "",
+    description: "",
+    address: "",
+    type: "rent",
+    beds: 10,
+    bathrooms: 10,
+    regularPrice: 50,
+    discountPrice: 0,
+    parking: false,
+    furnished: false,
+    offer: false,
+    sell: false,
   });
+  console.log(formData);
   const [imageUploadError, setImageUploadError] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
 
   // Function to handle image submission
   const handleImageSubmit = (e) => {
-    if (files.length > 0 && files.length + formData.imageURls.length <= 6) {
+    if (files.length > 0 && files.length + formData.imageUrls.length <= 6) {
       setUploading(true);
       const promises = []; // Array to hold promises for each image upload
 
@@ -73,7 +51,7 @@ function CreateListing() {
         .then((urls) => {
           // Once all images are uploaded, update formData with URLs
           setFormData((prev) => {
-            return { ...prev, imageURls: prev.imageURls.concat(urls) };
+            return { ...prev, imageUrls: prev.imageUrls.concat(urls) };
           });
           setImageUploadError(null);
           setUploading(false);
@@ -122,216 +100,275 @@ function CreateListing() {
   const handleRemoveImage = (index) => {
     setFormData((prevData) => ({
       ...prevData,
-      imageURls: prevData.imageURls.filter((_, i) => i !== index),
+      imageUrls: prevData.imageUrls.filter((_, i) => i !== index),
     }));
   };
 
+  const handleChange = (e) => {
+    if (e.target.id === "sell" || e.target.id === "rent") {
+      setFormData({
+        ...formData,
+        type: e.target.id,
+      });
+    }
+    if (
+      e.target.id === "parking" ||
+      e.target.id === "furnished" ||
+      e.target.id === "offer"
+    ) {
+      setFormData({
+        ...formData,
+        [e.target.id]: e.target.checked,
+      });
+    }
+    if (
+      e.target.type === "number" ||
+      e.target.type === "text" ||
+      e.target.type === "textarea"
+    ) {
+      setFormData({
+        ...formData,
+        [e.target.id]: e.target.value,
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (formData.imageUrls.length < 1) {
+        setError("Please upload at least one image.");
+        setTimeout(() => setError(null), 3000);
+        return;
+      }
+      if (+formData.regularPrice < +formData.discountPrice) {
+        setError("Discounted price should be less than regular price");
+        setTimeout(() => setError(null), 3000);
+        return;
+      }
+
+      setLoading(true);
+      setError(false);
+      const res = await fetch("/api/listing/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          userRef: currentUser._id,
+        }),
+      });
+
+      const data = await res.json();
+      setLoading(false);
+      if (data.success) {
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 2000);
+        navigate(`/listing/${data.listing._id}`);
+      } else {
+        setError(data.message);
+      }
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   return (
-    <main>
+    <form className="my-5" onSubmit={handleSubmit}>
       <div className="container">
         <h1 className="text-center py-5">Create a Listing</h1>
         <div className="row">
           <div className="col-lg-6 col-md-12">
-            <form className="my-5">
-              <div className="mb-3">
+            {/* <form className="my-5"> */}
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Name"
+                id="name"
+                required
+                onChange={handleChange}
+                value={formData.name}
+              />
+            </div>
+            <div className="mb-3">
+              <textarea
+                placeholder="Description"
+                className="form-control"
+                id="description"
+                rows="3"
+                required
+                onChange={handleChange}
+                value={formData.description}
+              />
+            </div>
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Address"
+                id="address"
+                required
+                onChange={handleChange}
+                value={formData.address}
+              />
+            </div>
+            <div className="d-flex flex-wrap justify-content-center mt-4">
+              <div className="form-check me-3">
                 <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Name"
-                  id="name"
+                  type="checkbox"
+                  className="form-check-input"
+                  id="sell"
+                  onChange={handleChange}
+                  checked={formData.type === "sell"}
                 />
+                <label className="form-check-label" htmlFor="check1">
+                  Sell
+                </label>
               </div>
-              <div className="mb-3">
-                <textarea
-                  placeholder="Description"
-                  className="form-control"
-                  id="description"
-                  rows="3"
-                />
-              </div>
-              <div className="mb-3">
+              <div className="form-check me-3">
                 <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Address"
-                  id="address"
+                  type="checkbox"
+                  className="form-check-input"
+                  id="rent"
+                  onChange={handleChange}
+                  checked={formData.type === "rent"}
+                />
+                <label className="form-check-label" htmlFor="check2">
+                  Rent
+                </label>
+              </div>
+              <div className="form-check me-3">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  id="parking"
+                  onChange={handleChange}
+                  checked={formData.parking}
+                />
+                <label className="form-check-label" htmlFor="check3">
+                  Parking
+                </label>
+              </div>
+              <div className="form-check me-3">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  id="furnished"
+                  onChange={handleChange}
+                  checked={formData.furnished}
+                />
+                <label className="form-check-label" htmlFor="check4">
+                  Furnished
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  id="offer"
+                  onChange={handleChange}
+                  checked={formData.offer}
+                />
+                <label className="form-check-label" htmlFor="check5">
+                  Offer
+                </label>
+              </div>
+            </div>
+
+            <div className="d-flex flex-wrap align-items-center mt-5 justify-content-center">
+              <div className="d-flex align-items-center me-3 mb-3 ">
+                <label
+                  htmlFor="beds"
+                  className="form-label me-2"
+                  style={{ width: "60px" }}
+                >
+                  Beds
+                </label>
+
+                <input
+                  type="number"
+                  id="beds"
+                  className="form-control mx-2 text-center"
+                  style={{ width: "100px" }}
+                  name="beds"
+                  min="1"
+                  max="10"
+                  value={formData.beds}
+                  onChange={handleChange}
                 />
               </div>
-              <div className="d-flex flex-wrap justify-content-center mt-4">
-                <div className="form-check me-3">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id="check1"
-                  />
-                  <label className="form-check-label" htmlFor="check1">
-                    Sell
-                  </label>
-                </div>
-                <div className="form-check me-3">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id="check2"
-                  />
-                  <label className="form-check-label" htmlFor="check2">
-                    Rent
-                  </label>
-                </div>
-                <div className="form-check me-3">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id="check3"
-                  />
-                  <label className="form-check-label" htmlFor="check3">
-                    Parking
-                  </label>
-                </div>
-                <div className="form-check me-3">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id="check4"
-                  />
-                  <label className="form-check-label" htmlFor="check4">
-                    Furnished
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id="check5"
-                  />
-                  <label className="form-check-label" htmlFor="check5">
-                    Offer
-                  </label>
-                </div>
-              </div>
+              <div className="d-flex align-items-center mb-3">
+                <label
+                  htmlFor="bathrooms"
+                  className="form-label me-2"
+                  style={{ width: "60px" }}
+                >
+                  Baths
+                </label>
 
-              <div className="d-flex flex-wrap align-items-center mt-5 justify-content-center">
-                <div className="d-flex align-items-center me-3 mb-3 ">
-                  <label htmlFor="beds" className="form-label me-2">
-                    Beds
-                  </label>
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => handleBedsChange(false)}
-                  >
-                    -
-                  </button>
-                  <input
-                    type="number"
-                    className="form-control w-50 mx-2 text-center"
-                    id="beds"
-                    name="beds"
-                    min="1"
-                    max="10"
-                    value={beds}
-                    readOnly
-                  />
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => handleBedsChange(true)}
-                  >
-                    +
-                  </button>
-                </div>
-                <div className="d-flex align-items-center mb-3">
-                  <label htmlFor="baths" className="form-label me-2">
-                    Baths
-                  </label>
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => handleBathsChange(false)}
-                  >
-                    -
-                  </button>
-                  <input
-                    type="number"
-                    className="form-control w-50 mx-2 text-center"
-                    id="baths"
-                    name="baths"
-                    min="1"
-                    max="10"
-                    value={baths}
-                    readOnly
-                  />
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => handleBathsChange(true)}
-                  >
-                    +
-                  </button>
-                </div>
+                <input
+                  type="number"
+                  className="form-control  mx-2 text-center"
+                  style={{ width: "100px" }}
+                  id="bathrooms"
+                  name="bathrooms"
+                  min="1"
+                  max="10"
+                  onChange={handleChange}
+                  value={formData.bathrooms}
+                />
               </div>
+            </div>
 
-              <div className="d-flex flex-wrap align-items-center mt-4 justify-content-center">
-                <div className="d-flex align-items-center me-3 mb-1">
-                  <label htmlFor="regular-price" className="form-label me-2">
-                    Price
-                  </label>
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => handleRegularChange(false)}
-                  >
-                    -
-                  </button>
-                  <input
-                    type="number"
-                    className="form-control w-50 mx-2 text-center"
-                    id="regular-price"
-                    name="regular-price"
-                    min="1"
-                    max="10"
-                    value={regular}
-                    readOnly
-                  />
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => handleRegularChange(true)}
-                  >
-                    +
-                  </button>
-                </div>
-                <div className="d-flex align-items-center mb-1">
-                  <label htmlFor="discounted-price" className="form-label me-2">
-                    Disc
-                  </label>
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => handleDiscountChange(false)}
-                  >
-                    -
-                  </button>
-                  <input
-                    type="number"
-                    className="form-control w-50 mx-2 text-center"
-                    id="discounted-price"
-                    name="discounted-price"
-                    min="1"
-                    max="10"
-                    value={discount}
-                    readOnly
-                  />
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => handleDiscountChange(true)}
-                  >
-                    +
-                  </button>
-                </div>
+            <div className="d-flex flex-wrap align-items-center mt-4 justify-content-center">
+              <div className="d-flex align-items-center me-3 mb-3">
+                <label
+                  htmlFor="regularPrice"
+                  className="form-label me-2"
+                  style={{ width: "60px" }}
+                >
+                  Price
+                </label>
+
+                <input
+                  type="number"
+                  className="form-control  mx-2 text-center"
+                  style={{ width: "100px" }}
+                  id="regularPrice"
+                  name="regularPrice"
+                  min="50"
+                  max="1000000"
+                  value={formData.regularPrice}
+                  onChange={handleChange}
+                />
               </div>
-            </form>
+              <div className="d-flex align-items-center mb-3">
+                <label
+                  htmlFor="discountPrice"
+                  className="form-label me-2"
+                  style={{ width: "60px" }}
+                  hidden={formData.offer ? false : true}
+                >
+                  Disc
+                </label>
+
+                <input
+                  type="number"
+                  className="form-control  mx-2 text-center"
+                  style={{ width: "100px" }}
+                  id="discountPrice"
+                  name="discountPrice"
+                  min="0"
+                  max="1000000"
+                  value={formData.discountPrice}
+                  onChange={handleChange}
+                  hidden={formData.offer ? false : true}
+                />
+              </div>
+            </div>
+            {/* </form> */}
           </div>
 
           <div className="col-lg-6 col-md-12">
@@ -358,18 +395,25 @@ function CreateListing() {
                   {uploading ? "Uploading..." : "Upload Images"}
                 </button>
                 <button
-                  type="button"
+                  type="submit"
                   className="btn px-5 my-2 my-md-4 ms-md-5 create-listing-fr"
                   style={{ backgroundColor: "#3D4A5D", color: "white" }}
+                  disabled={imageUploadError || uploading || loading}
                 >
-                  Create Listing
+                  {loading ? "Loading..." : "Create Listing"}
                 </button>
               </div>
               <p className="text-danger text-center text-md-start">
                 {imageUploadError ? imageUploadError : ""}
               </p>
-              {formData.imageURls.length > 0 &&
-                formData.imageURls.map((url, index) => (
+              <p className="text-danger text-center text-md-start">
+                {error ? error : ""}
+              </p>
+              <p className="text-success text-center text-md-start">
+                {success ? "Listing Successfully Created" : ""}
+              </p>
+              {formData.imageUrls.length > 0 &&
+                formData.imageUrls.map((url, index) => (
                   <div
                     key={url || index}
                     className="d-flex justify-content-between p-3 border align-items-center"
@@ -394,7 +438,7 @@ function CreateListing() {
           </div>
         </div>
       </div>
-    </main>
+    </form>
   );
 }
 
