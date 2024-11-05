@@ -266,6 +266,12 @@ function Profile() {
                 Sign Out
               </button>
             </div>
+            <div className="py-3 d-flex justify-content-center">
+              <a href="#" className="text-success my-listing-link">
+                {" "}
+                Show Listings
+              </a>
+            </div>
             {messageVisible && (
               <p
                 className={`fw-bold py-4 ${

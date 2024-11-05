@@ -133,6 +133,15 @@ body {
   cursor: pointer;
 }
 
+.my-listing-link {
+  text-decoration: none;
+}
+
+.my-listing-link:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
 /*  Create Listing Page */
 .create-listing-fr:hover {
   opacity: 0.8;
