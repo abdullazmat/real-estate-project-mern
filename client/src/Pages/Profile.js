@@ -33,9 +33,30 @@ function Profile() {
   const [messageVisible, setMessageVisible] = useState(false); // Set initially to false
   const [SucessMessageVisible, setSucessMessageVisible] = useState(false); // Set initially to false
   const [showListingsError, setShowListingsError] = useState(false);
+  const [noListingsError, setNoListingsError] = useState(false);
   const [userListing, setUserListing] = useState([]);
   const [showUserListing, setShowUserListing] = useState(false);
+  const [deleteListingsError, setDeleteListingsError] = useState(false);
   const dispatch = useDispatch();
+
+  // Fetch user listings when the Profile page is mounted
+  useEffect(() => {
+    const fetchUserListings = async () => {
+      try {
+        setShowListingsError(false);
+        const res = await fetch(`/api/user/listings/${currentUser._id}`);
+        const data = await res.json();
+        if (data.success !== false) {
+          setUserListing(data);
+        } else {
+          setShowListingsError(true);
+        }
+      } catch (error) {
+        setShowListingsError(true);
+      }
+    };
+    fetchUserListings();
+  }, [currentUser._id]); // Dependency on currentUser._id to ensure it triggers correctly
 
   // Handle image file upload
   useEffect(() => {
@@ -170,11 +191,19 @@ function Profile() {
 
   const handleShowListings = async (e) => {
     e.preventDefault();
+    if (userListing.length === 0) {
+      setNoListingsError(true);
+      setTimeout(() => {
+        setNoListingsError(false);
+      }, 3000);
+      return;
+    }
     if (showUserListing) {
       setShowUserListing(false);
       return;
     } else {
       try {
+        setShowListingsError(false);
         const res = await fetch(`/api/user/listings/${currentUser._id}`, {
           method: "GET",
         });
@@ -190,6 +219,26 @@ function Profile() {
         setShowListingsError(true);
         console.error(error);
       }
+    }
+  };
+
+  const deleteUserListing = async (listingid, e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`/api/listing/delete/${listingid}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        setDeleteListingsError(true);
+        return;
+      } else {
+        setUserListing((prev) =>
+          prev.filter((listing) => listing._id !== listingid)
+        );
+      }
+    } catch (error) {
+      setDeleteListingsError(true);
     }
   };
 
@@ -317,9 +366,15 @@ function Profile() {
                 Error fetching listings
               </p>
             )}
+            {deleteListingsError && (
+              <p className="text-danger fw-bold py-4">Error deleting listing</p>
+            )}
+            {noListingsError && (
+              <p className="text-danger fw-bold py-4">No Listings Found</p>
+            )}
             {userListing && showUserListing && userListing.length > 0 && (
               <div className="text-center my-5 ">
-                <h2 className="font-weight-bold">Your Listings</h2>
+                <h2 className="font-weight-bold ">Your Listings</h2>
                 {userListing.map((listing) => (
                   <div
                     className="container my-3 d-flex justify-content-between"
@@ -354,8 +409,8 @@ function Profile() {
                     </div>
                     <div className="listings-edit pe-1">
                       <div>
-                        <Link
-                          to={`/edit-listing/${listing._id}`}
+                        <a
+                          className="edit-listing-btn"
                           style={{
                             color: "green",
                             display: "block",
@@ -363,19 +418,22 @@ function Profile() {
                           }}
                         >
                           Edit
-                        </Link>
+                        </a>
                       </div>
                       <div>
-                        <Link
-                          to={`/delete-listing/${listing._id}`}
+                        <a
+                          className="delete-listing-btn"
                           style={{
                             color: "red",
                             display: "block",
                             textDecoration: "none",
                           }}
+                          onClick={() => {
+                            deleteUserListing(listing._id, event);
+                          }}
                         >
                           Delete
-                        </Link>
+                        </a>
                       </div>
                     </div>
                   </div>
