@@ -410,6 +410,7 @@ function Profile() {
                     <div className="listings-edit pe-1">
                       <div>
                         <a
+                          href={`/update-listing/${listing._id}`}
                           className="edit-listing-btn"
                           style={{
                             color: "green",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getStorage,
   ref,
@@ -7,7 +7,7 @@ import {
 } from "firebase/storage";
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function CreateListing() {
   const { currentUser } = useSelector((state) => state.user);
@@ -34,6 +34,28 @@ function CreateListing() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
+  const params = useParams();
+
+  useEffect(() => {
+    const fetchListing = async () => {
+      const listingiD = params.listingId;
+      if (!listingiD) return setError("Listing ID is missing");
+
+      try {
+        const res = await fetch(`/api/listing/get/${listingiD}`);
+        const data = await res.json();
+        if (data.success === false) {
+          setError(data.message);
+          setTimeout(() => setError(false), 3000);
+        } else if (data.listing) {
+          setFormData((prev) => ({ ...prev, ...data.listing }));
+        }
+      } catch (error) {
+        setError("Failed to fetch listing data");
+      }
+    };
+    fetchListing();
+  }, [params.listingId]);
 
   // Function to handle image submission
   const handleImageSubmit = (e) => {
@@ -149,7 +171,7 @@ function CreateListing() {
 
       setLoading(true);
       setError(false);
-      const res = await fetch("/api/listing/create", {
+      const res = await fetch(`/api/listing/update/${params.listingId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -162,13 +184,12 @@ function CreateListing() {
 
       const data = await res.json();
       setLoading(false);
-      if (data.success) {
-        setSuccess(true);
-        setTimeout(() => setSuccess(false), 2000);
-        navigate(`/listing/${data.listing._id}`);
-      } else {
+      if (data.success === false) {
         setError(data.message);
       }
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 2000);
+      navigate(`/listing/${params.listingId}`);
     } catch (error) {
       setError(error.message);
     }
@@ -177,7 +198,7 @@ function CreateListing() {
   return (
     <form className="my-5" onSubmit={handleSubmit}>
       <div className="container">
-        <h1 className="text-center py-5">Create a Listing</h1>
+        <h1 className="text-center py-5">Update a Listing</h1>
         <div className="row">
           <div className="col-lg-6 col-md-12">
             {/* <form className="my-5"> */}
@@ -190,8 +211,6 @@ function CreateListing() {
                 required
                 onChange={handleChange}
                 value={formData.name}
-                minlength="10"
-                maxlength="20"
               />
             </div>
             <div className="mb-3">
@@ -402,7 +421,7 @@ function CreateListing() {
                   style={{ backgroundColor: "#3D4A5D", color: "white" }}
                   disabled={imageUploadError || uploading || loading}
                 >
-                  {loading ? "Loading..." : "Create Listing"}
+                  {loading ? "Updating..." : "Update Listing"}
                 </button>
               </div>
               <p className="text-danger text-center text-md-start">
@@ -412,7 +431,7 @@ function CreateListing() {
                 {error ? error : ""}
               </p>
               <p className="text-success text-center text-md-start">
-                {success ? "Listing Successfully Created" : ""}
+                {success ? "Listing Successfully Updated" : ""}
               </p>
               {formData.imageUrls.length > 0 &&
                 formData.imageUrls.map((url, index) => (
