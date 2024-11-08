@@ -403,7 +403,12 @@ function Profile() {
 
                       <div className="listing-info">
                         <p>
-                          <b>{listing.name}</b>
+                          <a
+                            className="text-dark listing-name-link"
+                            href={`/listing/${listing._id}`}
+                          >
+                            <b>{listing.name}</b>
+                          </a>
                         </p>
                       </div>
                     </div>

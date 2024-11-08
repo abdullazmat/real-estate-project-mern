@@ -190,8 +190,8 @@ function CreateListing() {
                 required
                 onChange={handleChange}
                 value={formData.name}
-                minlength="10"
-                maxlength="20"
+                minlength="20"
+                maxlength="40"
               />
             </div>
             <div className="mb-3">
