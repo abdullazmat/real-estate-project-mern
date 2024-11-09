@@ -404,7 +404,7 @@ function Profile() {
                       <div className="listing-info">
                         <p>
                           <a
-                            className="text-dark listing-name-link"
+                            className="text-dark  listing-name-link"
                             href={`/listing/${listing._id}`}
                           >
                             <b>{listing.name}</b>
