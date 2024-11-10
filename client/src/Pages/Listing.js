@@ -138,11 +138,7 @@ function Listing() {
               className="btn text-white w-100 px-5"
               style={{ backgroundColor: "#7F1D1D" }}
             >
-              {`For ${
-                listing?.type
-                  ? listing.type.charAt(0).toUpperCase() + listing.type.slice(1)
-                  : "Type Not Given"
-              }`}
+              {` ${listing?.type ? "For Sale" : "Type Not Given"}`}
             </button>
           </div>
 

@@ -37,6 +37,9 @@ function Profile() {
   const [userListing, setUserListing] = useState([]);
   const [showUserListing, setShowUserListing] = useState(false);
   const [deleteListingsError, setDeleteListingsError] = useState(false);
+  const [localLoading, setLocalLoading] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(true);
+
   const dispatch = useDispatch();
 
   // Fetch user listings when the Profile page is mounted
@@ -58,9 +61,19 @@ function Profile() {
     fetchUserListings();
   }, [currentUser._id]); // Dependency on currentUser._id to ensure it triggers correctly
 
+  useEffect(() => {
+    // Check if the profile image (avatar) is already loaded
+    if (formData.avatar || currentUser.avatar) {
+      setLoadingImage(false);
+    } else {
+      setLoadingImage(true); // Set to true while loading the image
+    }
+  }, [currentUser.avatar, formData.avatar]);
+
   // Handle image file upload
   useEffect(() => {
     if (file) {
+      setLocalLoading(true);
       handleFileUpload(file);
     }
   }, [file]);
@@ -73,7 +86,12 @@ function Profile() {
     }, 3000); // Hide after 3 seconds
   };
 
+  const handleImageLoad = () => {
+    setLoadingImage(false);
+  };
+
   const handleFileUpload = (file) => {
+    setLocalLoading(true);
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
     const storageRef = ref(storage, fileName);
@@ -89,6 +107,7 @@ function Profile() {
       (error) => {
         console.error("Error uploading file: ", error);
         setFileUploadError(true);
+        setLocalLoading(false);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -97,6 +116,7 @@ function Profile() {
             avatar: downloadURL, // Add the image URL to formData
           }));
           setFileUploaded(true); // Set to true when file upload completes
+          setLocalLoading(false);
           showSuccessMessage();
         });
       }
@@ -253,12 +273,24 @@ function Profile() {
           hidden
           accept="image/*"
         />
-        <img
-          onClick={() => fileRef.current.click()}
-          src={formData.avatar || currentUser.avatar}
-          alt="profile"
-          className="rounded-circle mx-auto d-block img-avatar"
-        />
+        {loadingImage || localLoading || loading ? (
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ height: "100%" }}
+          >
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        ) : (
+          <img
+            onClick={() => fileRef.current.click()}
+            src={formData.avatar || currentUser.avatar}
+            alt="profile"
+            className="rounded-circle mx-auto d-block img-avatar"
+            onLoad={handleImageLoad}
+          />
+        )}
 
         <form className="container my-5 profile-form" onSubmit={handleSubmit}>
           {fileUploadError ? (
