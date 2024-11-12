@@ -8,12 +8,15 @@ import {
   faSquareParking,
   faChair,
 } from "@fortawesome/free-solid-svg-icons"; // Correct import
+import { useSelector } from "react-redux";
 
 function Listing() {
   const params = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [landlord, setLandLord] = useState(null);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -25,7 +28,7 @@ function Listing() {
 
       try {
         setLoading(true);
-        const res = await fetch(`/api/listing/get/${listingId}`);
+        const res = await fetch(`/api/user/listing/get/${listingId}`);
         if (!res.ok) {
           throw new Error(`Error: ${res.status} - ${res.statusText}`);
         }
@@ -53,6 +56,30 @@ function Listing() {
 
     fetchListing();
   }, [params.listingId]);
+
+  useEffect(() => {
+    if (listing && listing.userRef) {
+      const fetchLandLord = async () => {
+        try {
+          const res = await fetch(`/api/${listing.userRef}`);
+          if (!res.ok) {
+            throw new Error(`Error: ${res.status} - ${res.statusText}`);
+          }
+
+          const data = await res.json();
+          if (data.success === false) {
+            throw new Error(data.message);
+          }
+
+          setLandLord(data.user);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      fetchLandLord();
+    }
+  }, [listing]);
 
   return (
     <div className="container-fluid">
@@ -121,7 +148,7 @@ function Listing() {
             ? "Something Went Wrong ..."
             : loading
             ? "Loading ..."
-            : `${listing.name} - $  ${listing.regularPrice}`}
+            : `${listing?.name} - $  ${listing.regularPrice}`}
         </h3>
 
         <div
@@ -196,18 +223,20 @@ function Listing() {
         </div>
 
         <div className="mb-5">
-          <button
-            className="btn text-white px-5 mt-4 w-100 contact-lord-btn"
-            style={{ backgroundColor: "#334155" }}
-            onClick={() =>
-              window.open(
-                `https://wa.me/${process.env.REACT_APP_WHATSAPP_NUMBER}`,
-                "_blank"
-              )
-            }
-          >
-            CONTACT LANDLORD
-          </button>
+          {currentUser && listing?.userRef !== currentUser._id && (
+            <button
+              className="btn text-white px-5 mt-4 w-100 contact-lord-btn"
+              style={{ backgroundColor: "#334155" }}
+              onClick={() =>
+                window.open(
+                  `mailto:${landlord?.email}}?subject=Inquiry about Listing&body=Hi, I'm interested in your listing and would like to know more.${listing?.name}`,
+                  "_blank"
+                )
+              }
+            >
+              CONTACT LANDLORD
+            </button>
+          )}
         </div>
       </div>
     </div>
