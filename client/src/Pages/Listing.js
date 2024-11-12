@@ -15,7 +15,7 @@ function Listing() {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [landlord, setLandLord] = useState(null);
+  const [landlord, setLandlord] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ function Listing() {
 
       try {
         setLoading(true);
-        const res = await fetch(`/api/user/listing/get/${listingId}`);
+        const res = await fetch(`/api/listing/get/${listingId}`);
         if (!res.ok) {
           throw new Error(`Error: ${res.status} - ${res.statusText}`);
         }
@@ -58,27 +58,19 @@ function Listing() {
   }, [params.listingId]);
 
   useEffect(() => {
-    if (listing && listing.userRef) {
-      const fetchLandLord = async () => {
-        try {
-          const res = await fetch(`/api/${listing.userRef}`);
-          if (!res.ok) {
-            throw new Error(`Error: ${res.status} - ${res.statusText}`);
-          }
+    const fetchLandlord = async () => {
+      if (!listing || !listing.userRef) return;
 
-          const data = await res.json();
-          if (data.success === false) {
-            throw new Error(data.message);
-          }
+      try {
+        const res = await fetch(`/api/user/${listing.userRef}`);
+        const data = await res.json();
+        setLandlord(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-          setLandLord(data.user);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-
-      fetchLandLord();
-    }
+    fetchLandlord();
   }, [listing]);
 
   return (
@@ -148,7 +140,7 @@ function Listing() {
             ? "Something Went Wrong ..."
             : loading
             ? "Loading ..."
-            : `${listing?.name} - $  ${listing.regularPrice}`}
+            : `${listing.name} - $  ${listing.regularPrice}`}
         </h3>
 
         <div
@@ -227,12 +219,12 @@ function Listing() {
             <button
               className="btn text-white px-5 mt-4 w-100 contact-lord-btn"
               style={{ backgroundColor: "#334155" }}
-              onClick={() =>
+              onClick={() => {
                 window.open(
-                  `mailto:${landlord?.email}}?subject=Inquiry about Listing&body=Hi, I'm interested in your listing and would like to know more.${listing?.name}`,
+                  `mailto:${landlord?.email}?subject=Inquiry about Listing&body=Hi, I'm interested in your listing and would like to know more about ${listing?.name}.`,
                   "_blank"
-                )
-              }
+                );
+              }}
             >
               CONTACT LANDLORD
             </button>
