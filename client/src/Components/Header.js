@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function Header() {
@@ -11,10 +11,29 @@ function Header() {
   // Define the active state based on the current pathname
   const [active, setActive] = useState(location.pathname);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+
   // Update the active state when a new page is clicked
   const handleSetActive = (path) => {
     setActive(path);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("searchTerm", searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light py-3 app-header">
@@ -46,19 +65,27 @@ function Header() {
           <div className="d-flex w-100 justify-content-between align-items-center">
             {/* Search form centered */}
             <div className="d-flex justify-content-center flex-grow-1">
-              <form className="d-flex" style={{ width: "350px" }}>
+              <form
+                className="d-flex"
+                style={{ width: "350px" }}
+                onSubmit={handleSubmit}
+              >
                 <div className="input-group">
                   <input
                     className="form-control"
                     type="search"
                     placeholder="Search"
                     aria-label="Search"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
-                  <span className="input-group-text">
-                    <a className="searchicon">
-                      <i className="fas fa-search"></i>
-                    </a>
-                  </span>
+                  <button className="p-0 m-0 border-0">
+                    <span className="input-group-text">
+                      <a className="searchicon">
+                        <i className="fas fa-search"></i>
+                      </a>
+                    </span>
+                  </button>
                 </div>
               </form>
             </div>
