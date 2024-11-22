@@ -331,7 +331,7 @@ function CreateListing() {
                   className="form-label me-2"
                   style={{ width: "60px" }}
                 >
-                  Price
+                  Price {formData.type === "rent" ? "($/month)" : ""}
                 </label>
 
                 <input

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import ListingItem from "../Components/ListingItem";
 function Search() {
   const navigate = useNavigate();
   const [sidebardata, setSidebarData] = useState({
@@ -17,7 +18,7 @@ function Search() {
   const [listings, setListings] = useState([]);
   console.log(listings);
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
     const typeFromUrl = urlParams.get("type");
     const parkingFromUrl = urlParams.get("parking");
@@ -34,7 +35,7 @@ function Search() {
       offerFromUrl ||
       sortFromUrl ||
       orderFromUrl
-    )
+    ) {
       setSidebarData({
         searchTerm: searchTermFromUrl || "",
         type: typeFromUrl || "all",
@@ -44,13 +45,14 @@ function Search() {
         sort: sortFromUrl || "created_at",
         order: orderFromUrl || "desc",
       });
+    }
 
     const fetchListings = async () => {
       setLoading(true);
       const searchQuery = urlParams.toString();
       const res = await fetch(`/api/listing/get?${searchQuery}`);
       const data = await res.json();
-      setListings(data);
+      setListings(data.listings || []);
       setLoading(false);
     };
 
@@ -107,8 +109,11 @@ function Search() {
       <div className="row g-0">
         {/* Left Side - Form */}
         <div
-          className="col-12 col-md-4 py-4 px-3 ms-3 border-end h-auto h-md-100 min-vh-md-100"
-          style={{ borderColor: "black", borderWidth: "2px" }}
+          className="col-12 col-md-4 py-4 px-3 ms-3 border-end "
+          style={{
+            borderColor: "black",
+            borderWidth: "2px",
+          }}
         >
           <form onSubmit={handleSubmit}>
             {/* Search Term */}
@@ -227,9 +232,7 @@ function Search() {
                 onChange={handleChange}
                 defaultValue={"created_at_desc"}
               >
-                <option value="regularPrice_desc" selected>
-                  Price High To Low
-                </option>
+                <option value="regularPrice_desc">Price High To Low</option>
                 <option value="regularPrice_asc">Price Low To High</option>
                 <option value="createdAt_desc">Latest</option>
                 <option value="createdAt_asc">Oldest</option>
@@ -249,8 +252,21 @@ function Search() {
           </form>
         </div>
         {/* Right Side - Placeholder */}
-        <div className="col-12 col-md-4 py-4 ms-3">
+        <div className="col-12 col-md-6 py-4 ms-3">
           <h2 style={{ color: "#334155" }}>Listing Results:</h2>
+          <div>
+            {!loading && listings.length === 0 && (
+              <p className="text-danger  fs-5">No listing found!</p>
+            )}
+
+            {loading && <p className="text-success fs-5">Loading...</p>}
+
+            {!loading &&
+              listings &&
+              listings.map((listing) => (
+                <ListingItem key={listing._id} listing={listing} />
+              ))}
+          </div>
         </div>
       </div>
     </div>
