@@ -12,7 +12,10 @@ function ListingItem({ listing }) {
   return (
     <div>
       <Link to={`/listing/${listing._id}`} style={{ textDecoration: "none" }}>
-        <div className="card d-flex flex-wrap mt-5" style={{ width: "60%" }}>
+        <div
+          className="card d-flex flex-wrap mt-5 ms-3"
+          style={{ width: "90%", height: "100%" }}
+        >
           <img
             src={
               listing.imageUrls &&
@@ -23,22 +26,42 @@ function ListingItem({ listing }) {
             }
             className="card-img-top"
             alt={listing.name}
+            style={{
+              width: "100%",
+              height: "200px",
+              objectFit: "cover",
+            }}
           />
           <div className="card-body">
             <h5 className="card-title">
-              {listing.name
-                .split(" ")
-                .map(
-                  (word) =>
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                )
-                .join(" ")}
+              {listing.name.length > 20
+                ? `${listing.name
+                    .slice(0, 20)
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")} ...` // Corrected single closing brace
+                : listing.name
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
             </h5>
           </div>
           <ul className="list-group list-group-flush">
             <li className="list-group-item d-flex align-items-center">
               <FontAwesomeIcon icon={faLocationDot} />
-              <p className="p=0 m-0 ms-2">{listing.address}</p>
+              <p className="p-0 m-0 ms-2">
+                {listing.address.length > 15
+                  ? `${listing.address.slice(0, 15)} ...`
+                  : listing.address}
+              </p>
             </li>
             <li className="list-group-item d-flex align-items-center">
               <FontAwesomeIcon icon={faDollarSign} />

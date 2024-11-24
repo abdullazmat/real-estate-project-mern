@@ -16,7 +16,7 @@ function Search() {
 
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
-  console.log(listings);
+  const [showMore, setShowMore] = useState(false);
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
@@ -49,9 +49,14 @@ function Search() {
 
     const fetchListings = async () => {
       setLoading(true);
+      setShowMore(false);
       const searchQuery = urlParams.toString();
       const res = await fetch(`/api/listing/get?${searchQuery}`);
       const data = await res.json();
+      console.log(data.listings);
+      if (data.listings.length > 8) {
+        setShowMore(true);
+      }
       setListings(data.listings || []);
       setLoading(false);
     };
@@ -103,13 +108,27 @@ function Search() {
     navigate(`/search?${searchQuery}`);
   };
 
+  const onShowMoreClick = async () => {
+    const numberofListings = listings.length;
+    const startIndex = numberofListings;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/listing/get?${searchQuery}`);
+    const data = await res.json();
+    if (data.listings.length < 9) {
+      setShowMore(false);
+    }
+    setListings([...listings, ...data.listings]);
+  };
+
   return (
     <div className="container-fluid p-0">
       {/* Row for Form and Right Section */}
       <div className="row g-0">
         {/* Left Side - Form */}
         <div
-          className="col-12 col-md-4 py-4 px-3 ms-3 border-end "
+          className="col-12 col-md-4 py-4 px-3  border-end "
           style={{
             borderColor: "black",
             borderWidth: "2px",
@@ -252,20 +271,42 @@ function Search() {
           </form>
         </div>
         {/* Right Side - Placeholder */}
-        <div className="col-12 col-md-6 py-4 ms-3">
-          <h2 style={{ color: "#334155" }}>Listing Results:</h2>
+        <div className="col-12 col-md-8 py-4 ">
+          <h2 className="ms-3" style={{ color: "#334155" }}>
+            Listing Results:
+          </h2>
           <div>
             {!loading && listings.length === 0 && (
-              <p className="text-danger  fs-5">No listing found!</p>
+              <p className="text-danger mt-3 ms-3 fs-5">No listing found!</p>
             )}
 
-            {loading && <p className="text-success fs-5">Loading...</p>}
+            {loading && (
+              <p className="text-success text-center mt-3 fs-5">Loading...</p>
+            )}
 
-            {!loading &&
-              listings &&
-              listings.map((listing) => (
-                <ListingItem key={listing._id} listing={listing} />
-              ))}
+            {!loading && listings && (
+              <div className="row g-0">
+                {listings.map((listing) => (
+                  <div
+                    key={listing._id}
+                    className="col-lg-4 col-md-6 col-sm-12"
+                  >
+                    <ListingItem key={listing._id} listing={listing} />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {!loading && listings && showMore && (
+              <div className="d-flex justify-content-center">
+                <button
+                  className="btn btn-success ms-3 mt-5 "
+                  onClick={onShowMoreClick()}
+                >
+                  Show More
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
