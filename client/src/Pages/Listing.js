@@ -7,6 +7,7 @@ import {
   faBath,
   faSquareParking,
   faChair,
+  faShare,
 } from "@fortawesome/free-solid-svg-icons"; // Correct import
 import { useSelector } from "react-redux";
 
@@ -17,6 +18,7 @@ function Listing() {
   const [error, setError] = useState(false);
   const [landlord, setLandlord] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -107,9 +109,35 @@ function Listing() {
                         padding: 0,
                       }}
                     />
+                    <div
+                      className="position-absolute top-0 end-0 m-5 p-2 bg-light border rounded-circle"
+                      style={{ zIndex: 10 }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faShare}
+                        className="text-primary"
+                        onClick={() => {
+                          navigator.clipboard.writeText(window.location.href);
+                          setCopied(true);
+                          setTimeout(() => {
+                            setCopied(false);
+                          }, 2000);
+                        }}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
+              {/* Copy Notification */}
+              {copied && (
+                <p
+                  className="position-absolute top-0 end-0 me-5 mt-5 bg-light px-3 py-2 rounded"
+                  style={{ zIndex: 10 }}
+                >
+                  Link copied!
+                </p>
+              )}
               <button
                 className="carousel-control-prev "
                 type="button"

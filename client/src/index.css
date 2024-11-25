@@ -235,3 +235,19 @@ html {
   text-decoration: underline;
 }
 /* Extras */
+.share-icon {
+  font-size: 1.5rem;
+  color: #0d6efd;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.share-icon:hover {
+  transform: scale(1.2);
+}
+
+.copied-notification {
+  font-size: 0.9rem;
+  color: #4a5568;
+  background: #edf2f7;
+}
