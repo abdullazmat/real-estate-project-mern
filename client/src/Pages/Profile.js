@@ -418,10 +418,9 @@ function Profile() {
                         className="listing-image d-flex"
                         style={{ flexWrap: "wrap" }}
                       >
-                        {listing.imageUrls.map((imageUrl, index) => (
+                        {listing.imageUrls && listing.imageUrls.length > 0 && (
                           <img
-                            key={index}
-                            src={imageUrl}
+                            src={listing.imageUrls[0]}
                             alt={listing.name}
                             className="listing-image"
                             style={{
@@ -430,7 +429,7 @@ function Profile() {
                               marginBottom: "10px",
                             }}
                           />
-                        ))}
+                        )}
                       </div>
 
                       <div className="listing-info">
@@ -439,7 +438,11 @@ function Profile() {
                             className="text-dark  listing-name-link"
                             href={`/listing/${listing._id}`}
                           >
-                            <b>{listing.name}</b>
+                            <b>
+                              {listing.name.length > 20
+                                ? listing.name.slice(0, 30) + "..."
+                                : listing.name}
+                            </b>
                           </a>
                         </p>
                       </div>

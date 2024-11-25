@@ -1,6 +1,9 @@
 /* Nav Background  */
-body {
+body,
+html {
   background-color: rgb(241, 250, 241);
+  margin: 0;
+  padding: 0;
 }
 
 .app-header {
@@ -46,10 +49,10 @@ body {
 
 /* Media Query for header */
 @media (max-width: 600px) {
-  .app-header .d-flex form {
+  /* .app-header .d-flex form {
     width: 70px;
     padding-right: 150px;
-  }
+  } */
   .signup-form {
     width: 5rem;
   }
@@ -172,8 +175,61 @@ body {
   opacity: 0.7;
 }
 
+.container-fluid {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.carousel {
+  margin: 0;
+  padding: 0;
+}
+
+.carousel-inner {
+  width: 100vw; /* Full viewport width */
+}
+
+.carousel img {
+  width: 100%; /* Stretch the image */
+  height: auto;
+}
+
 /*  Search Listing Page */
 .filter-search-btn:hover {
   cursor: pointer;
   opacity: 0.7;
+}
+
+/*  Home Page */
+.home-search-btn:hover {
+  cursor: pointer;
+  opacity: 0.7;
+  text-decoration: underline;
+}
+/* Extras */
+@media (max-width: 580px) {
+  .navlinks {
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-start; /* Align items to the left */
+    margin-right: 30px;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  .navbar-toggler {
+    margin-right: 30px;
+  }
+
+  .search-form {
+    margin-top: 30px;
+    width: 80%;
+  }
+
+  .navbar {
+    text-align: center; /* Ensure proper centering */
+  }
+
+  .pfp-image {
+    max-width: 40px;
+    margin-left: 10px;
+  }
 }

@@ -44,7 +44,7 @@ function Header() {
           to="/"
           onClick={() => handleSetActive("/")}
         >
-          <span className="MernText">Mern</span>{" "}
+          <span className="MernText">Shaz</span>{" "}
           <span className="EstateText">Estate</span>
         </Link>
 
@@ -62,15 +62,15 @@ function Header() {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <div className="d-flex w-100 justify-content-between align-items-center">
+          <div className="d-flex w-100 flex-wrap justify-content-between align-items-center">
             {/* Search form centered */}
-            <div className="d-flex justify-content-center flex-grow-1">
+            <div className="d-flex justify-content-center flex-grow-1 mb-2 mb-lg-0">
               <form
                 className="d-flex"
                 style={{ width: "350px" }}
                 onSubmit={handleSubmit}
               >
-                <div className="input-group">
+                <div className="input-group search-form">
                   <input
                     className="form-control"
                     type="search"
@@ -91,7 +91,7 @@ function Header() {
             </div>
 
             {/* Navigation items on the right */}
-            <ul className="navbar-nav mb-2 mb-lg-0 ms-auto navlinks">
+            <ul className="navbar-nav mb-2 mb-lg-0 ms-auto navlinks text-center">
               <li className="nav-item">
                 <Link
                   className={`nav-link navtext ${

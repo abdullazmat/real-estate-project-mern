@@ -56,6 +56,8 @@ function Search() {
       console.log(data.listings);
       if (data.listings.length > 8) {
         setShowMore(true);
+      } else {
+        setShowMore(false);
       }
       setListings(data.listings || []);
       setLoading(false);
@@ -116,6 +118,7 @@ function Search() {
     const searchQuery = urlParams.toString();
     const res = await fetch(`/api/listing/get?${searchQuery}`);
     const data = await res.json();
+    console.log(data);
     if (data.listings.length < 9) {
       setShowMore(false);
     }
@@ -271,7 +274,7 @@ function Search() {
           </form>
         </div>
         {/* Right Side - Placeholder */}
-        <div className="col-12 col-md-8 py-4 ">
+        <div className="col-12 col-md-8 py-4 w-95">
           <h2 className="ms-3" style={{ color: "#334155" }}>
             Listing Results:
           </h2>
@@ -297,11 +300,11 @@ function Search() {
               </div>
             )}
 
-            {!loading && listings && showMore && (
+            {showMore && (
               <div className="d-flex justify-content-center">
                 <button
                   className="btn btn-success ms-3 mt-5 "
-                  onClick={onShowMoreClick()}
+                  onClick={onShowMoreClick}
                 >
                   Show More
                 </button>

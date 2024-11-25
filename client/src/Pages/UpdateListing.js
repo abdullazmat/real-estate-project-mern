@@ -25,7 +25,7 @@ function CreateListing() {
     parking: false,
     furnished: false,
     offer: false,
-    sell: false,
+    sale: false,
   });
   console.log(formData);
   const [imageUploadError, setImageUploadError] = useState(null);
@@ -127,7 +127,7 @@ function CreateListing() {
   };
 
   const handleChange = (e) => {
-    if (e.target.id === "sell" || e.target.id === "rent") {
+    if (e.target.id === "sale" || e.target.id === "rent") {
       setFormData({
         ...formData,
         type: e.target.id,
@@ -240,9 +240,9 @@ function CreateListing() {
                 <input
                   type="checkbox"
                   className="form-check-input"
-                  id="sell"
+                  id="sale"
                   onChange={handleChange}
-                  checked={formData.type === "sell"}
+                  checked={formData.type === "sale"}
                 />
                 <label className="form-check-label" htmlFor="check1">
                   Sell
@@ -400,6 +400,7 @@ function CreateListing() {
               <div className="mb-3">
                 <input
                   className="form-control"
+                  required
                   type="file"
                   multiple
                   id="formFile"
