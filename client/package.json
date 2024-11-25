@@ -34,5 +34,5 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "proxy": "https://shaz-mern-api.vercel.app"
+  "proxy": "http://localhost:3001"
 }
