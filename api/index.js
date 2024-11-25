@@ -6,6 +6,7 @@ import UserRouter from "./routes/user.route.js";
 import Authrouter from "./routes/auth.route.js";
 import ListingRouter from "./routes/listing.route.js";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 dotenv.config(); // Load environment variables from .env file
 
@@ -23,6 +24,8 @@ mongoose
   .catch((err) => {
     console.error("Error connecting to MongoDB:", err);
   });
+
+const __dirname = path.resolve();
 
 const app = express();
 
@@ -47,6 +50,12 @@ app.listen(3001, () => {
 app.use("/api/user", UserRouter);
 app.use("/api/auth", Authrouter);
 app.use("/api/listing", ListingRouter);
+
+app.use(express.static(path.join(__dirname, "/client/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
 // Middle Ware Error Handling
 app.use((err, req, res, next) => {
