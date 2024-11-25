@@ -1,7 +1,7 @@
 function About() {
   return (
-    <div className="container">
-      <div class="mt-5 p-1 p-md-4 p-lg-5  ms-2 ms-lg-5 rounded text-start">
+    <div className="container p-0 mb-0">
+      <div class="mt-5 p-1 p-md-4 p-lg-5 mb-0  ms-2 ms-lg-5 rounded text-start">
         <h1 style={{ color: "#1e293b", fontWeight: "bold" }}>
           About Shaz Estate
         </h1>
