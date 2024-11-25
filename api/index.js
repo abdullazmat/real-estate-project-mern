@@ -33,6 +33,8 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:3000",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
 
@@ -42,7 +44,8 @@ app.use(express.json());
 // Middleware to use cookies
 app.use(cookieParser());
 
-app.listen(3001, () => {
+const port = process.env.PORT || 3001;
+app.listen(port, () => {
   console.log("Server is running on port 3001");
 });
 
