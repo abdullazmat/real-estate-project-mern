@@ -25,12 +25,14 @@ mongoose
     console.error("Error connecting to MongoDB:", err);
   });
 
+const __dirname = path.resolve();
+
 const app = express();
 
 // Enable CORS for all routes
 app.use(
   cors({
-    origin: "https://shaz-mern.vercel.app",
+    origin: "http://localhost:3000",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
@@ -42,13 +44,19 @@ app.use(express.json());
 // Middleware to use cookies
 app.use(cookieParser());
 
+app.listen(3001, () => {
+  console.log("Server is running on port 3001");
+});
+
 // Route Handling
 app.use("/api/user", UserRouter);
 app.use("/api/auth", Authrouter);
 app.use("/api/listing", ListingRouter);
 
-app.get("/api", (req, res) => {
-  res.send("API is working");
+app.use(express.static(path.join(__dirname, "/client/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
 // Middle Ware Error Handling
@@ -60,10 +68,4 @@ app.use((err, req, res, next) => {
     statuscode,
     message,
   });
-});
-
-const PORT = process.env.PORT || 3001;
-
-app.listen(PORT, () => {
-  console.log("Server is running on port 3001");
 });
