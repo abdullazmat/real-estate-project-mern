@@ -42,12 +42,6 @@ app.use(express.json());
 // Middleware to use cookies
 app.use(cookieParser());
 
-const PORT = process.env.PORT || 3001;
-
-app.listen(PORT, () => {
-  console.log("Server is running on port 3001");
-});
-
 // Route Handling
 app.use("/api/user", UserRouter);
 app.use("/api/auth", Authrouter);
@@ -66,4 +60,10 @@ app.use((err, req, res, next) => {
     statuscode,
     message,
   });
+});
+
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, () => {
+  console.log("Server is running on port 3001");
 });
