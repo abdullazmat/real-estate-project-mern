@@ -25,8 +25,6 @@ mongoose
     console.error("Error connecting to MongoDB:", err);
   });
 
-const __dirname = path.resolve();
-
 const app = express();
 
 // Enable CORS for all routes
@@ -54,12 +52,6 @@ app.listen(PORT, () => {
 app.use("/api/user", UserRouter);
 app.use("/api/auth", Authrouter);
 app.use("/api/listing", ListingRouter);
-
-app.use(express.static(path.join(__dirname, "/client/build")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-});
 
 // Middle Ware Error Handling
 app.use((err, req, res, next) => {
