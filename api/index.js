@@ -32,7 +32,7 @@ const app = express();
 // Enable CORS for all routes
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://shaz-mern.vercel.app",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
@@ -44,7 +44,9 @@ app.use(express.json());
 // Middleware to use cookies
 app.use(cookieParser());
 
-app.listen(3001, () => {
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, () => {
   console.log("Server is running on port 3001");
 });
 

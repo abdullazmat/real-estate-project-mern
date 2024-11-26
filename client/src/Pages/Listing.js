@@ -30,7 +30,9 @@ function Listing() {
 
       try {
         setLoading(true);
-        const res = await fetch(`/api/listing/get/${listingId}`);
+        const res = await fetch(
+          `https://shaz-mern-api.vercel.app/api/listing/get/${listingId}`
+        );
         if (!res.ok) {
           throw new Error(`Error: ${res.status} - ${res.statusText}`);
         }
@@ -64,7 +66,9 @@ function Listing() {
       if (!listing || !listing.userRef) return;
 
       try {
-        const res = await fetch(`/api/user/${listing.userRef}`);
+        const res = await fetch(
+          `https://shaz-mern-api.vercel.app/api/user/${listing.userRef}`
+        );
         const data = await res.json();
         setLandlord(data);
       } catch (error) {

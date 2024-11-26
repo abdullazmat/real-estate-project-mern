@@ -42,7 +42,9 @@ function CreateListing() {
       if (!listingiD) return setError("Listing ID is missing");
 
       try {
-        const res = await fetch(`/api/listing/get/${listingiD}`);
+        const res = await fetch(
+          `https://shaz-mern-api.vercel.app/api/listing/get/${listingiD}`
+        );
         const data = await res.json();
         if (data.success === false) {
           setError(data.message);
@@ -171,16 +173,19 @@ function CreateListing() {
 
       setLoading(true);
       setError(false);
-      const res = await fetch(`/api/listing/update/${params.listingId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          userRef: currentUser._id,
-        }),
-      });
+      const res = await fetch(
+        `https://shaz-mern-api.vercel.app/api/listing/update/${params.listingId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            userRef: currentUser._id,
+          }),
+        }
+      );
 
       const data = await res.json();
       setLoading(false);

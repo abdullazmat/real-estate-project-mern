@@ -47,7 +47,9 @@ function Profile() {
     const fetchUserListings = async () => {
       try {
         setShowListingsError(false);
-        const res = await fetch(`/api/user/listings/${currentUser._id}`);
+        const res = await fetch(
+          `https://shaz-mern-api.vercel.app/api/user/listings/${currentUser._id}`
+        );
         const data = await res.json();
         if (data.success !== false) {
           setUserListing(data);
@@ -245,9 +247,12 @@ function Profile() {
   const deleteUserListing = async (listingid, e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`/api/listing/delete/${listingid}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `https://shaz-mern-api.vercel.app/api/listing/delete/${listingid}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json();
       if (data.success === false) {
         setDeleteListingsError(true);

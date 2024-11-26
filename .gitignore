@@ -1,5 +1,5 @@
-/api/node_modules
-/client/node_modules
-/client/.env
-/api/.env
-/instructions
+api/node_modules
+client/node_modules
+client/.env
+api/.env
+instructions

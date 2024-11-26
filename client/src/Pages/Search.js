@@ -51,7 +51,9 @@ function Search() {
       setLoading(true);
       setShowMore(false);
       const searchQuery = urlParams.toString();
-      const res = await fetch(`/api/listing/get?${searchQuery}`);
+      const res = await fetch(
+        `https://shaz-mern-api.vercel.app/api/listing/get?${searchQuery}`
+      );
       const data = await res.json();
       console.log(data.listings);
       if (data.listings.length > 8) {
@@ -116,7 +118,9 @@ function Search() {
     const urlParams = new URLSearchParams(location.search);
     urlParams.set("startIndex", startIndex);
     const searchQuery = urlParams.toString();
-    const res = await fetch(`/api/listing/get?${searchQuery}`);
+    const res = await fetch(
+      `https://shaz-mern-api.vercel.app/api/listing/get?${searchQuery}`
+    );
     const data = await res.json();
     console.log(data);
     if (data.listings.length < 9) {
