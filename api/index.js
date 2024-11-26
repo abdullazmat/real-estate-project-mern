@@ -53,6 +53,10 @@ app.use("/api/user", UserRouter);
 app.use("/api/auth", Authrouter);
 app.use("/api/listing", ListingRouter);
 
+app.get("/api", (req, res) => {
+  res.send("API is working");
+});
+
 // Middle Ware Error Handling
 app.use((err, req, res, next) => {
   const statuscode = err.statuscode || 500;
