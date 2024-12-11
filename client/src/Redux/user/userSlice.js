@@ -5,6 +5,7 @@ const initialState = {
   currentUser: null,
   error: null,
   loading: false,
+  success: false,
 };
 
 const userSlice = createSlice({
@@ -19,6 +20,7 @@ const userSlice = createSlice({
       state.currentUser = action.payload;
       state.loading = false;
       state.error = null;
+      state.success = true;
     },
     signInFailure: (state, action) => {
       state.loading = false;
