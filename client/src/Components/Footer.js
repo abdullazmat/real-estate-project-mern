@@ -6,7 +6,7 @@ function Footer() {
     <div class="container mt-5">
       <footer className="p-0 m-0">
         <p class="text-center text-body-secondary p-0 py-3 mb-0">
-          Shaz Estate © 2024 | All Rights Reserved
+          Shaz Estate © 2024 | Developed By Abdullah
         </p>
       </footer>
     </div>
