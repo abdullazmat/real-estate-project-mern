@@ -2,7 +2,7 @@
 
 ![Home Page](./client/src/images/Homepage.png)
 ![Lisiting Desc](./client/src/images/Lisiting%20Desc.png)
-![Listings](./client/src/images/Listings.png)
+![Listings](./client/src/images/Lisitngs.png)
 ![Search Page](./client/src/images/Search%20Page.png)
 
 
