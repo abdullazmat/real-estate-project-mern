@@ -1,9 +1,9 @@
 # Real Estate Project - MERN Stack
 
 ![Home Page](./client/src/images/Homepage.png)
-![Home Page](./client/src/images/Lisiting%20Desc.png)
-![Home Page](./client/src/images/Lisitings.png)
-![Home Page](./client/src/images/Search%20Page.png)
+![Lisiting Desc](./client/src/images/Lisiting%20Desc.png)
+![Listings](./client/src/images/Listings.png)
+![Search Page](./client/src/images/Search%20Page.png)
 
 
 
